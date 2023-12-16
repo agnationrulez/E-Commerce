@@ -1,0 +1,169 @@
+<!-- Prototype.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>A&J's Kitchen Appliances</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #DEB887;
+        }
+
+        .navbar {
+            background-color: #DAA520;
+            color: #ffffff;
+        }
+
+        .jumbotron {
+            background-color: #F0E68C;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            border: 1px solid #D2691E;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+
+        /* Cart Modal */
+        #cartModal {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<link rel="stylesheet" type="text/css" href="style.css">
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <a class="navbar-brand" href="#">A&J</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="cart.html">Cart</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<div class="jumbotron text-center">
+    <h1 class="display-4">Welcome to A&J's Kitchen Appliances</h1>
+    <p class="lead">Your one-stop shop for all your cooking needs!</p>
+</div>
+
+<!-- Product Section -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="product-card">
+                <img src="knife.jpg" alt="Product Image" class="img-fluid">
+                <h4>Knife Set</h4>
+                <p>Introducing our premium knife set, a culinary essential for every home chef. Crafted with precision and care, this exquisite set includes a chef's knife, paring knife, utility knife, and more, all housed in an elegant storage block. Each knife boasts a high-quality stainless steel blade, ensuring long-lasting sharpness and durability.</p>
+                <p><strong>$19.99</strong></p>
+                <button class="btn btn-primary" onclick="addToCart('Knife Set', 19.99)">Add to Cart</button>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="product-card">
+                <img src="pot.jpg" alt="Product Image" class="img-fluid">
+                <h4>Kitchen Pots</h4>
+                <p>Introducing our premium kitchen pot set, a masterpiece designed to elevate your cooking experience. This comprehensive set includes a range of pots and pans, meticulously crafted for versatility and performance in the kitchen. From saucepans to stockpots, each piece is constructed with high-quality materials for even heat distribution and durability.</p>
+                <p><strong>$29.99</strong></p>
+                <button class="btn btn-primary" onclick="addToCart('Kitchen Pots', 29.99)">Add to Cart</button>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="product-card">
+                <img src="utensil.jpg" alt="Product Image" class="img-fluid">
+                <h4>Utensil Set</h4>
+                <p>Introducing our premium utensil set, a sophisticated ensemble crafted to meet all your culinary needs. This meticulously curated collection features a variety of essential kitchen tools designed for precision and durability. From spatulas to ladles, each utensil is made with high-quality materials, ensuring longevity and performance.</p>
+                <p><strong>$14.99</strong></p>
+                <button class="btn btn-primary" onclick="addToCart('Utensil Set', 14.99)">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- Javascript for cart -->
+
+<!-- Your existing HTML content -->
+
+<script>
+    let cartItems = [];
+
+    function addToCart(productName, price) {
+        const productDetails = { productName, price };
+        cartItems.push(productDetails);
+        updateCartUI();
+        saveCartToLocalStorage();
+        alert(`${productName} has been added to the cart!`);
+    }
+
+    function purchaseItems() {
+        // Add your logic for processing the purchase, e.g., sending an order to the server
+        alert('Thank you for your purchase!');
+        // Clear the cart after the purchase
+        clearCart();
+    }
+
+    function removeFromCart(index) {
+        // Remove item from cart by index
+        if (index >= 0 && index < cartItems.length) {
+            cartItems.splice(index, 1);
+            updateCartUI();
+            saveCartToLocalStorage();
+        }
+    }
+
+    function updateCartUI() {
+        // Display the cart items in the UI as needed
+        // This function may be modified based on how you want to display the items
+        // For example, you might want to update a cart preview on the page
+    }
+
+    function clearCart() {
+        cartItems = [];
+        updateCartUI();
+        saveCartToLocalStorage();
+    }
+
+    function saveCartToLocalStorage() {
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    }
+
+    function loadCartFromLocalStorage() {
+        const storedCart = localStorage.getItem('cartItems');
+        if (storedCart) {
+            cartItems = JSON.parse(storedCart);
+            updateCartUI();
+        }
+    }
+
+    // Load cart items when the page loads
+    loadCartFromLocalStorage();
+</script>
+
+</body>
+</html>

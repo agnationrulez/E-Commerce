@@ -1,0 +1,167 @@
+<!-- cart.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Shopping Cart</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #DEB887;
+        }
+
+        .navbar {
+            background-color:#DAA520;
+            color: #ffffff;
+        }
+
+        .jumbotron {
+            background-color: #F0E68C;
+            margin-top: 20px;
+        }
+
+        /* Cart Modal */
+        #cartModal {
+            margin-top: 50px;
+        }
+
+        /* Cart Content Styles */
+        .cart-content {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">A&J</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="Prototype.html">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Cart</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="jumbotron text-center">
+        <h1 class="display-4">Shopping Cart</h1>
+        <p class="lead">Your selected items are displayed below.</p>
+    </div>
+
+    <!-- Cart Content -->
+    <div class="container cart-content">
+        <ul id="cartItems" class="list-group">
+            <!-- Cart items will be displayed here -->
+        </ul>
+
+        <!-- Total -->
+        <p id="total" class="lead">Total: $0.00</p>
+
+        <!-- Purchase Button -->
+        <button class="btn btn-success" onclick="purchaseItems()">Purchase</button>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- JavaScript for Cart -->
+    <script>
+        let cartItems = [];
+
+        function addToCartFromQuery() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productName = urlParams.get('productName');
+            const price = parseFloat(urlParams.get('price'));
+
+            if (productName && !isNaN(price)) {
+                const productDetails = { productName, price };
+                cartItems.push(productDetails);
+                updateCartUI();
+                saveCartToLocalStorage();
+            }
+        }
+
+        function calculateTotal() {
+            return cartItems.reduce((total, item) => total + item.price, 0);
+        }
+
+        function purchaseItems() {
+            const total = calculateTotal();
+            if (total > 0) {
+                alert(`Thank you for your purchase! Total: $${total.toFixed(2)}`);
+                clearCart();
+            } else {
+                alert('Your cart is empty. Please add items to your cart before purchasing.');
+            }
+        }
+
+        function removeFromCart(index) {
+            if (index >= 0 && index < cartItems.length) {
+                cartItems.splice(index, 1);
+                updateCartUI();
+                saveCartToLocalStorage();
+            }
+        }
+
+        function updateCartUI() {
+            const cartItemsElement = document.getElementById('cartItems');
+            const totalElement = document.getElementById('total');
+            cartItemsElement.innerHTML = '';
+            cartItems.forEach((item, index) => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.textContent = `${item.productName} - $${item.price.toFixed(2)}`;
+
+                const removeButton = document.createElement('button');
+                removeButton.className = 'btn btn-danger btn-sm float-right';
+                removeButton.textContent = 'Remove';
+                removeButton.onclick = () => removeFromCart(index);
+
+                listItem.appendChild(removeButton);
+                cartItemsElement.appendChild(listItem);
+            });
+
+            const total = calculateTotal();
+            totalElement.textContent = `Total: $${total.toFixed(2)}`;
+        }
+
+        function clearCart() {
+            cartItems = [];
+            updateCartUI();
+            saveCartToLocalStorage();
+        }
+
+        function saveCartToLocalStorage() {
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        }
+
+        function loadCartFromLocalStorage() {
+            const storedCart = localStorage.getItem('cartItems');
+            if (storedCart) {
+                cartItems = JSON.parse(storedCart);
+                updateCartUI();
+            }
+        }
+
+        // Load cart items when the page loads
+        loadCartFromLocalStorage();
+        // Add this to load items from query parameters
+        addToCartFromQuery();
+    </script>
+</body>
+</html>
